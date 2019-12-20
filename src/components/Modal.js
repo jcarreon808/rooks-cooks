@@ -82,10 +82,10 @@ const Modal = ({ handleModal, show, handleAdd, classes }) => {
         </div>
         <Col2>
           {searchResults.length &&
-            searchResults.map(img => (
-              <ImageContainer>
+            searchResults.map((img, index) => (
+              <ImageContainer key={index}>
                 <ImageWrapper>
-                  <img src={img.urls.thumb} />
+                  <img src={img.urls.thumb} alt="" />
                 </ImageWrapper>
                 <div>{img.urls.regular}</div>
               </ImageContainer>
