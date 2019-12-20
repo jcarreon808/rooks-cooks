@@ -1,45 +1,58 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components'
-import classList from './classes'
-import NavBar from './NavBar'
+import styled from 'styled-components';
+import classList from './data/classes';
+import NavBar from './components/NavBar';
+import Modal from './components/Modal';
+import ClassCard from './components/ClassCard';
 
 const App = () => {
-  const [classes, setClasses] = useState([])
+  const [classes, setClasses] = useState([]);
+  const [isVisible, setVisible] = useState(false);
 
   useEffect(() => {
-    setClasses(classList)
-  }, [])
+    setClasses(classList);
+  }, []);
+
+  const handleModal = () => {
+    setVisible(!isVisible);
+  };
+
+  const handleAdd = newClass => {
+    setClasses([...classes, newClass]);
+    setVisible(!isVisible);
+  };
+
+  const handleDelete = id => {
+    const filterdClasses = classes.filter(klass => klass.id !== id);
+    setClasses(filterdClasses);
+  };
 
   return (
     <Wrapper>
       <NavBar />
       <h1>Welcome to RookieCookie!</h1>
-      {classes.map(klass => <ClassCard content={klass}/>)}
+      <h2>
+        Add a new class <button onClick={handleModal}>Click Me</button>
+      </h2>
+      <Modal show={isVisible} handleModal={handleModal} handleAdd={handleAdd} classes={classes} />
+      <ClassCardContainer>
+        {classes.map((klass, index) => (
+          <ClassCard key={klass + '-' + index} content={klass} handleDelete={handleDelete} />
+        ))}
+      </ClassCardContainer>
     </Wrapper>
-  )
-}
+  );
+};
 
-export default App
+export default App;
 
-const ClassCard = ({content}) => (
-  <ClassCardWrapper>
-    <img height="50%" width="100%" src={content.featureImage} alt='' />
-    <h4>{content.title}</h4>
-    <h5>{content.instructor}</h5>
-    <h5>{content.description}</h5>
-    <h5>{content.duration} min</h5>
-  </ClassCardWrapper>
-)
-
-const Wrapper = styled.div `
+const Wrapper = styled.div`
   margin-top: 45px;
   text-align: center;
-`
+`;
 
-const ClassCardWrapper = styled.div`
-  height: 300px;
-  width: 175px;
-  border-radius: 5px;
-  border: solid 1px black;
-  overflow: hidden;
-`
+const ClassCardContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+`;
